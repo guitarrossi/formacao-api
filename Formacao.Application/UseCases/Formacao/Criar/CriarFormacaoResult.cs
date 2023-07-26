@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Formacao.Application.CasosDeUso.Formacao.Criar
 {
-    public record CriarFormacaoResult(Guid id, string Nome, DateTime DataInicio)
+    public record CriarFormacaoResult(Guid Id, string Nome, DateTime DataInicio)
     {
     }
 }

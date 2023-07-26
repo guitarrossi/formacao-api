@@ -1,5 +1,7 @@
 ﻿using Formacao.Application.Interfaces.Repositories.Base;
+using Formacao.Application.Modelos;
 using Formacao.Dominio.Entidades;
+using Formacao.Dominio.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +21,7 @@ namespace Formacao.Application.Interfaces.Repositories
         Task<bool> ChecarSeNomeExisteIgnorandoIdFornecido(string nome, Guid? ignorarEsteId = default);
 
         Task<bool> ChecarSeFormacaoExiste(Guid id);
+
+        Task<ResultadoPaginado<Dominio.Entidades.Formacao>> FiltarFormacoesPaginado(string nome, FormacaoStatusEnum? status, DateTime? dataInicio, int? tamanhoPagina = 20, int? paginaAtual = 1);
     }
 }

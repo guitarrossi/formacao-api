@@ -15,39 +15,34 @@ namespace Formacao.API.Extensions
             if (response.Result is null)
                 return Results.NoContent();
 
-            return Results.Ok(new
-            {
+            return Results.Ok(
                 response.Result
-            });
+            );
         }
 
 
         public static IResult RetornarAccepted(string route, Response response)
         {
             if (!response.Sucesso)
-                return Results.BadRequest(new { Erros = response.Erros});
+                return Results.BadRequest(response.Erros);
 
             if (response.Result is null)
                 return Results.NoContent();
 
-            return Results.Accepted(route, new
-            {
-                response.Result
-            });
+            return Results.Accepted(route, response.Result);
         }
 
         public static IResult RetornarCreated(string route, Response response)
         {
             if (!response.Sucesso)
-                return Results.BadRequest(new { Erros = response.Erros });
+                return Results.BadRequest(response.Erros);
 
             if (response.Result is null)
                 return Results.NoContent();
 
-            return Results.Created(route, new
-            {
+            return Results.Created(route,
                 response.Result
-            });
+            );
         }
 
     }

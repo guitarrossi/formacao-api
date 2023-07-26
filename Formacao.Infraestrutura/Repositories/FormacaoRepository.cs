@@ -1,4 +1,6 @@
 ﻿using Formacao.Application.Interfaces.Repositories;
+using Formacao.Application.Modelos;
+using Formacao.Dominio.Enums;
 using Formacao.Infraestrutura.Context;
 using Formacao.Infraestrutura.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +44,32 @@ namespace Formacao.Infraestrutura.Repositories
         public async Task<Dominio.Entidades.Formacao> SelecionarPorIdAsync(Guid id)
         {
             return await DbSet.FindAsync(id);
+        }
+
+        public async Task<ResultadoPaginado<Dominio.Entidades.Formacao>> FiltarFormacoesPaginado(string nome, FormacaoStatusEnum? status, DateTime? dataInicio, int? tamanhoPagina = 20, int? paginaAtual = 1)
+        {
+            var query = DbSet.AsNoTrackingWithIdentityResolution();
+
+            if (ValorSeraFiltrado(nome))
+                query = query.Where(f => f.Nome.Contains(nome));
+            if (status.HasValue)
+                query = query.Where(f => f.Status == status.Value);
+            if (dataInicio.HasValue)
+                query = query.Where(f => dataInicio >= f.DataInicio);
+
+            var total = await query.CountAsync();
+
+            paginaAtual = paginaAtual == null ? 0 : paginaAtual == 1 ? 0 : paginaAtual;
+            tamanhoPagina = tamanhoPagina == null ? 20 : tamanhoPagina;
+
+            var resultados  = await query.Skip(paginaAtual.Value * tamanhoPagina.Value).Take(tamanhoPagina.Value).ToListAsync();
+
+            return new ResultadoPaginado<Dominio.Entidades.Formacao>(paginaAtual.Value, total, tamanhoPagina.Value, resultados);
+        }
+
+        private bool ValorSeraFiltrado(string texto)
+        {
+            return texto is not null && !string.IsNullOrEmpty(texto);
         }
     }
 }
